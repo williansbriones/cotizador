@@ -59,7 +59,7 @@ function persistir() {
 function generarId(descripcion) {
   const base = String(descripcion || 'item')
     .toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '') // quita tildes
+    .normalize('NFD').replace(/\p{Diacritic}/gu, '') // quita tildes/diacríticos
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 30) || 'item';

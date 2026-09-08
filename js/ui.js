@@ -85,3 +85,64 @@ export function confirmar({
     overlay.querySelector('[data-accion="confirmar"]').focus();
   });
 }
+
+/**
+ * Modal para pedir uno o más datos al usuario (reemplaza a window.prompt).
+ * @param {object} opts
+ * @param {string} opts.titulo
+ * @param {string} opts.mensaje
+ * @param {Array<{nombre:string,label:string,tipo?:string,valor?:any,min?:number,max?:number,step?:number}>} opts.campos
+ * @param {string} opts.textoConfirmar
+ * @returns {Promise<object|null>} objeto con los valores, o null si cancela
+ */
+export function pedirDatos({ titulo = 'Datos', mensaje = '', campos = [], textoConfirmar = 'Aceptar' } = {}) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    const camposHTML = campos.map((c) => `
+      <label class="pedir-campo">
+        <span>${c.label}</span>
+        <input class="input" name="${c.nombre}" type="${c.tipo || 'number'}"
+          value="${c.valor ?? ''}" ${c.min != null ? `min="${c.min}"` : ''}
+          ${c.max != null ? `max="${c.max}"` : ''} ${c.step != null ? `step="${c.step}"` : ''} />
+      </label>`).join('');
+
+    overlay.innerHTML = `
+      <div class="modal" role="dialog" aria-modal="true">
+        <h3 class="modal-titulo">${titulo}</h3>
+        ${mensaje ? `<p class="modal-mensaje">${mensaje}</p>` : ''}
+        <div class="pedir-campos">${camposHTML}</div>
+        <div class="modal-acciones">
+          <button class="btn btn-secundario" data-accion="cancelar">Cancelar</button>
+          <button class="btn btn-primario" data-accion="confirmar">${textoConfirmar}</button>
+        </div>
+      </div>`;
+
+    const cerrar = (valor) => {
+      overlay.remove();
+      document.removeEventListener('keydown', onKey);
+      resolve(valor);
+    };
+    const recolectar = () => {
+      const datos = {};
+      campos.forEach((c) => {
+        const el = overlay.querySelector(`[name="${c.nombre}"]`);
+        datos[c.nombre] = c.tipo === 'text' ? el.value : Number(el.value);
+      });
+      return datos;
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') cerrar(null);
+      if (e.key === 'Enter') cerrar(recolectar());
+    };
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) cerrar(null);
+      const accion = e.target.getAttribute?.('data-accion');
+      if (accion === 'cancelar') cerrar(null);
+      if (accion === 'confirmar') cerrar(recolectar());
+    });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(overlay);
+    overlay.querySelector('input')?.focus();
+  });
+}

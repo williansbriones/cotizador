@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirigiendo…</title>
+  <script>
+    // GitHub Pages sirve este 404.html ante rutas desconocidas.
+    // Redirigimos al index.html manteniendo el subdirectorio del repositorio.
+    // Ej: https://usuario.github.io/nombre-repo/loquesea  ->  .../nombre-repo/
+    (function () {
+      var partes = location.pathname.split('/').filter(Boolean);
+      // En Pages de proyecto, el primer segmento es el nombre del repo.
+      var base = partes.length > 0 ? '/' + partes[0] + '/' : '/';
+      location.replace(location.origin + base);
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirigiendo a la calculadora… Si no ocurre, <a href="./">haz clic aquí</a>.</p>
+</body>
+</html>

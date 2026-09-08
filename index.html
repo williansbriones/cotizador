@@ -19,6 +19,7 @@
       <nav class="nav-tabs" role="tablist">
         <button class="nav-tab activo" role="tab" data-vista="catalogo" aria-selected="true">📋 Catálogo</button>
         <button class="nav-tab" role="tab" data-vista="cotizacion" aria-selected="false">🧾 Cotización</button>
+        <button class="nav-tab" role="tab" data-vista="guardadas" aria-selected="false">💾 Guardadas</button>
       </nav>
       <button class="btn-icono btn-tema" id="btn-tema" title="Cambiar tema">🌙</button>
     </div>
@@ -28,7 +29,15 @@
     <section id="vista" class="vista"></section>
   </main>
 
-  <!-- SheetJS se cargará por CDN en la etapa de exportación -->
+  <footer class="app-footer">
+    Herramienta interna · Montos en pesos chilenos (CLP) · Precios <strong>referenciales</strong>, validar con proveedor antes de enviar al cliente.
+  </footer>
+
+  <!-- Contenedor oculto para impresión / PDF (se llena al imprimir) -->
+  <div id="area-impresion" aria-hidden="true"></div>
+
+  <!-- SheetJS con soporte de estilos (fork xlsx-js-style), vía CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script type="module" src="./js/app.js"></script>
 </body>
 </html>

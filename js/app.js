@@ -1,5 +1,7 @@
 // app.js — punto de entrada: inicialización, routing de vistas y tema.
 import { cargarCatalogo, renderVistaCatalogo } from './catalogo.js';
+import { cargarCotizacion, renderVistaCotizacion } from './cotizacion.js';
+import { renderVistaGuardadas } from './guardadas.js';
 import { CLAVES, guardar, leer } from './storage.js';
 
 // Registro de vistas. En etapas siguientes se agregan cotización, guardadas, etc.
@@ -10,11 +12,11 @@ const VISTAS = {
   },
   cotizacion: {
     titulo: 'Cotización',
-    render: (cont) => {
-      cont.innerHTML = `<div class="placeholder-vista">
-        <p>🚧 El constructor de cotización se implementa en la <strong>Etapa 3</strong>.</p>
-      </div>`;
-    },
+    render: (cont) => renderVistaCotizacion(cont),
+  },
+  guardadas: {
+    titulo: 'Guardadas',
+    render: (cont) => renderVistaGuardadas(cont, irA),
   },
 };
 
@@ -56,6 +58,7 @@ async function init() {
   });
 
   await cargarCatalogo();
+  cargarCotizacion();
   irA('catalogo');
   console.log('[calcelec] Aplicación iniciada.');
 }
