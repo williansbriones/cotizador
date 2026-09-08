@@ -1,0 +1,10 @@
+{
+  "name": "calculadora-cotizaciones-electricas",
+  "version": "1.0.0",
+  "description": "Calculadora web de cotizaciones para trabajos eléctricos industriales (Chile, CLP).",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node tests/calculos.test.mjs"
+  }
+}

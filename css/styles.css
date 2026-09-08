@@ -1,0 +1,31 @@
+/* styles.css — estilos base.
+   Etapa 1: estilos mínimos del placeholder. El diseño completo (layout de dos
+   columnas, panel pegajoso, modo claro/oscuro) se agrega en etapas posteriores. */
+
+:root {
+  --bg: #f7f8fa;
+  --fg: #1a1a1a;
+  --accent: #2563eb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.placeholder {
+  max-width: 640px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.placeholder h1 { margin-top: 0; font-size: 1.4rem; }
+.placeholder a { color: var(--accent); }

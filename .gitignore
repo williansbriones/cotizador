@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.log
+# Datos locales con precios reales (NO subir a un repo público)
+precios.local.json
+config.local.json

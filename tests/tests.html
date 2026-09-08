@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tests · Cálculos de Cotización</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.2rem; }
+    #out { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 13px; }
+    .ok { color: #16a34a; } .fail { color: #dc2626; } .head { color: #2563eb; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Tests de <code>calculos.js</code></h1>
+  <p>Los resultados aparecen abajo y también en la consola del navegador (F12).</p>
+  <div id="out"></div>
+
+  <script type="module">
+    import {
+      redondearPeso, fraccionPorcentaje, subtotalLinea, subtotalNeto,
+      calcularTotales, validarLinea, validarParametros,
+    } from '../js/calculos.js';
+
+    const out = document.getElementById('out');
+    let pasados = 0, fallidos = 0;
+    const log = (txt, cls = '') => { out.innerHTML += `<span class="${cls}">${txt}</span>\n`; };
+    const head = (t) => log(`\n== ${t} ==`, 'head');
+    function assert(nombre, cond, extra = '') {
+      if (cond) { pasados++; log(`  ✓ ${nombre}`, 'ok'); }
+      else { fallidos++; log(`  ✗ ${nombre}  ${extra}`, 'fail'); console.error('FALLÓ:', nombre, extra); }
+    }
+    const eq = (n, a, b) => assert(n, a === b, `esperado ${b}, obtuvo ${a}`);
+
+    head('redondearPeso');
+    eq('100.4 -> 100', redondearPeso(100.4), 100);
+    eq('100.5 -> 101', redondearPeso(100.5), 101);
+
+    head('subtotalLinea');
+    eq('2 × 25000', subtotalLinea({ cantidad: 2, precioUnitario: 25000 }), 50000);
+    eq('con 10% desc', subtotalLinea({ cantidad: 2, precioUnitario: 25000, descuento: 10 }), 45000);
+
+    head('calcularTotales (caso completo)');
+    const t = calcularTotales([{ cantidad: 1, precioUnitario: 100000 }], { descuentoGlobal: 10, margen: 20, imprevistos: 10, iva: 19 });
+    eq('neto', t.neto, 100000);
+    eq('total', t.total, 141372);
+
+    head('calcularTotales (defaults)');
+    eq('total', calcularTotales([{ cantidad: 1, precioUnitario: 100000 }], {}).total, 157080);
+
+    head('validaciones');
+    assert('cantidad negativa detectada', validarLinea({ cantidad: -1, precioUnitario: 100 }).length > 0);
+    assert('margen 0 avisa', validarParametros({ margen: 0 }).length > 0);
+
+    log(`\n${'='.repeat(40)}`);
+    log(`Resultado: ${pasados} pasados, ${fallidos} fallidos`, fallidos ? 'fail' : 'ok');
+    log('='.repeat(40));
+  </script>
+</body>
+</html>
