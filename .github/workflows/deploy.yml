@@ -29,6 +29,8 @@ jobs:
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true # habilita Pages automáticamente si aún no lo está
 
       - name: Subir artefacto (la raíz del repo es 100% estática)
         uses: actions/upload-pages-artifact@v3
